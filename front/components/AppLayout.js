@@ -1,15 +1,22 @@
 import React from 'react';
 // next router
 import Link from 'next/link';
+import { Menu } from 'antd';
 
 const AppLayout = ({ children }) => {
     return (
         <div>
-            <div>
-                <Link href="/"><a>Home</a></Link>
-                <Link href="/profile"><a>My Profile</a></Link>
-                <Link href="/signup"><a>Signup</a></Link>
-            </div>
+            <Menu node="horizontal">
+                <Menu.Item>
+                    <Link href="/"><a>Home</a></Link>
+                </Menu.Item>
+                <Menu.Item>
+                    <Link href="/profile"><a>My Profile</a></Link>
+                </Menu.Item>
+                <Menu.Item>
+                    <Link href="/signup"><a>Signup</a></Link>
+                </Menu.Item>
+            </Menu>
             {children}
         </div>
     );

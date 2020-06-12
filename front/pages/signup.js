@@ -2,7 +2,7 @@ import React from 'react';
 import AppLayout from '../components/AppLayout';
 
 const Signup = () => {
-    return <AppLayout>会員登録画面</AppLayout>
+    return <AppLayout>Signup</AppLayout>
 }
 
 export default Signup;
