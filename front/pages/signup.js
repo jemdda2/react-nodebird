@@ -1,8 +1,15 @@
 import React from 'react';
-import AppLayout from '../components/AppLayout';
+import Head from 'next/head';
 
 const Signup = () => {
-    return <AppLayout>Signup</AppLayout>
-}
+    return (
+        <div>
+            <Head>
+                <title>Signup | NodeBird</title>
+            </Head>
+            <div>Signup</div>
+        </div>
+    );
+};
 
 export default Signup;

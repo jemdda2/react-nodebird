@@ -1,4 +1,5 @@
 import React from 'react';
+//headを変更する
 import Head from 'next/head';
 import PropTypes from 'prop-types';
 import AppLayout from '../components/AppLayout';

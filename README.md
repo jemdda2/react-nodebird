@@ -1,11 +1,9 @@
-React Next 勉強
+# 2020/06/12
+### AppLayout.js
+* 一部の共通部分を処理
+* gutter：column間の距離
+* target="_black": 新しいブラウザで開く 
 
-2020/06/12
-# start  
-
-## AppLayout.js
-* 一部の共通部分を処理  
-
-## _app.js
+### _app.js
 * ページの全部の共通部分を処理
-* 
+
