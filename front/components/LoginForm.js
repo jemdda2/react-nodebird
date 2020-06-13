@@ -1,11 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
-import styled from 'styled-components';
-
-const ButtonWrapper = styled.dev`
-    margin-top: 10px;
-`;
 
 const LoginForm = ({ setIsLoggedIn }) => {
     const [id, setId] = useState('');
@@ -25,7 +20,7 @@ const LoginForm = ({ setIsLoggedIn }) => {
     }, [id, password]);
 
     return (
-        <Form onFinish={onSubmitForm}>
+        <Form onFinish={onSubmitForm} style={{ padding: '10px' }}>
             <div>
                 <label htmlFor="user-id">ID</label>
                 <br />
@@ -42,10 +37,10 @@ const LoginForm = ({ setIsLoggedIn }) => {
                     required 
                 />
             </div>
-            <ButtonWrapper>
+            <div style={{ marginTop: '10px' }}>
                 <Button type="primary" htmlType="submit" loading={false}>ログイン</Button>
                 <Link href="/signup"><a><Button>会員登録</Button></a></Link>
-            </ButtonWrapper>
+            </div>
         </Form>
     );
 };
