@@ -11,4 +11,4 @@ const NicknameeEditForm = () => {
     );
 };
 
-export default NicknameeEditForm
+export default NicknameeEditForm;

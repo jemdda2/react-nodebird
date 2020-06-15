@@ -1,18 +1,27 @@
 import React, { useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
-import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginAction } from '../reducers/user';
 
 import useInput from '../hooks/useInput';
 
-const LoginForm = ({ setIsLoggedIn }) => {
+
+const LoginForm = () => {
     const [id, onChangeId] = useInput('');
     const [password, onChangePassword] = useInput('');
+    const { isLoggingIn } = useSelector((state) => state.user);
+    const dispatch = useDispatch();
 
-    const onSubmitForm = useCallback(() => {
-        console.log(id, password);
-        setIsLoggedIn(true);
-    }, [id, password]);
+    const onSubmitForm = useCallback((e) => {
+        e.preventDefault();
+        dispatch({
+          type: loginAction,
+          data: {
+            id, password,
+          },
+        });
+      }, [id, password]);
 
     return (
         <Form onFinish={onSubmitForm} style={{ padding: '10px' }}>
@@ -33,15 +42,11 @@ const LoginForm = ({ setIsLoggedIn }) => {
                 />
             </div>
             <div style={{ marginTop: '10px' }}>
-                <Button type="primary" htmlType="submit" loading={false}>ログイン</Button>
+                <Button type="primary" htmlType="submit" loading={isLoggingIn}>ログイン</Button>
                 <Link href="/signup"><a><Button>会員登録</Button></a></Link>
             </div>
         </Form>
     );
 };
-
-LoginForm.prototype = {
-    setIsLoggedIn: PropTypes.func.isRequired,
-}
 
 export default LoginForm;

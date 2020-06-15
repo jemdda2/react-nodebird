@@ -2,24 +2,21 @@ import React from 'react';
 //headを変更する
 import Head from 'next/head';
 import PropTypes from 'prop-types';
-import AppLayout from '../components/AppLayout';
+import 'antd/dist/antd.css';
+
+import wrapper from '../store/configureStore';
 
 const NodeBird = ({ Component }) => {
-  return (
     <>
       <Head>
         <title>NodeBird</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/antd/3.16.2/antd.css" />
       </Head>
-      <AppLayout>
-        <Component />
-      </AppLayout>
+      <Component />
     </>
-  );
 };
 
 NodeBird.propTypes = {
-  Component: PropTypes.elementType,
+  Component: PropTypes.elementType.isRequired,
 };
 
-export default NodeBird;
+export default wrapper.withRedux(NodeBird);

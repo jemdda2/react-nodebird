@@ -1,11 +1,19 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
+
+import AppLayout from '../components/AppLayout';
+import PostForm from '../components/PostForm';
+import PostCard from '../components/PostCard';
+
 
 const Home = () => {
+    const { isLoggedIn } = useSelector((state) => state.user)
+    const { mainPosts } = useSelector((state) => state.post)
     return (
-        // 웹레이아웃으로 감싸준다
-        <div>
-            <div>Hello, next</div>
-        </div>
+        <AppLayout>
+            {isLoggedIn && <PostForm />}
+            {mainPosta.map((post) => <PostCard key={post.id} post={post} />)}
+        </AppLayout>
     );
 }
 
