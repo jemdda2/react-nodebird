@@ -1,59 +1,64 @@
 export const initialState = {
     mainPosts: [{
+      id: 1,
+      User: {
         id: 1,
+        nickname: '제로초',
+      },
+      content: '첫 번째 게시글',
+      Images: [{
+        src: 'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726',
+      }, {
+        src: 'https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg',
+      }, {
+        src: 'https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg',
+      }],
+      Comments: [{
         User: {
-          id: 1,
-          nickname: '제로초',
+          nickname: 'nero',
         },
-        content: '첫 번째 게시글',
-        img: 'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726',
-        Comments: [],
-      }], // 화면에 보일 포스트들
-      imagePaths: [], // 미리보기 이미지 경로
-      addPostErrorReason: '', // 포스트 업로드 실패 사유
-      isAddingPost: false, // 포스트 업로드 중
-      postAdded: false, // 포스트 업로드 성공
-      isAddingComment: false,
-      addCommentErrorReason: '',
-      commentAdded: false,
-    };
-
-const dummyPost = {
-    id: 2,
-    User: {
-        id: 1,
-        nickname: '제로초',
-    },
-    content: '나는 더미입니다.',
-    Comments: [],
-};
-    
-const dummyComment = {
-    id: 1,
-    User: {
-        id: 1,
-        nickname: '제로초',
-    },
-    createdAt: new Date(),
-    content: '더미 댓글입니다.',
-};
-
-const ADD_POST = 'ADD_POST';
-export const addPost = {
+        content: '우와 개정판이 나왔군요~',
+      }, {
+        User: {
+          nickname: 'hero',
+        },
+        content: '얼른 사고싶어요~',
+      }]
+    }],
+    imagePaths: [],
+    postAdded: false,
+  };
+  
+  const ADD_POST = 'ADD_POST';
+  
+  export const addPost = {
     type: ADD_POST,
-}
-
-const reducer = (state = initialState, action) => {
+  };
+  
+  const dummyPost = {
+    id: 2,
+    content: '더미데이터입니다.',
+    User: {
+      id: 1,
+      nickname: '제로초',
+    },
+    Images: [],
+    Comments: [],
+  };
+  
+  export default (state = initialState, action) => {
     switch (action.type) {
-        case ADD_POST:
-            return {
-                ...state,
-                mainPosts: [dummyPost, ...state.mainPosts],
-                postAdded: true,
-            }
-        default:
-            return state;
+      case ADD_POST: {
+        return {
+          ...state,
+          mainPosts: [dummyPost, ...state.mainPosts],
+          postAdded: true,
+        };
+      }
+      default: {
+        return {
+          ...state,
+        };
+      }
     }
-};
-
-export default reducer;
+  };

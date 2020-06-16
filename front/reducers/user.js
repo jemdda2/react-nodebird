@@ -1,13 +1,13 @@
 export const initialState = {
     inLoggedIn: false,
-    user: null,
+    me: null,
     signUpData: {},
     loginData: {},
 }
 
 // async action creator
 // action creator
-export const loginAction = () => {
+export const loginAction = (data) => {
     return {
         type: 'LOG_IN',
         data,
@@ -26,13 +26,13 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 isLoggedIn: true,
-                user: action.data,
+                me: action.data,
             };
         case 'LOG_OUT':
             return {
                 ...state,
                 isLoggedIn: false,
-                user: null,
+                me: null,
             };
         default:
             return {
