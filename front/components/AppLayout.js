@@ -13,7 +13,7 @@ const SerchInput = styled(Input.Search)`
 `;
 
 const AppLayout = ({ children }) => {
-    const isLoggedIn = useSelector((state) => state.user.isLoggedIn);
+    const { me } = useSelector((state) => state.user);
 
     return (
         <div>
@@ -27,10 +27,10 @@ const AppLayout = ({ children }) => {
             </Menu>
             <Row gutter={8}>
                 <Col xs={24} md={6}>
-                    { isLoggedIn ? <UserProfile /> : <LoginForm /> }
+                    {me ? <UserProfile /> : <LoginForm />}
                 </Col>
                 <Col xs={24} md={12}>
-                    { children }    
+                    {children}    
                 </Col>
                 <Col xs={24} md={6}>
                     <a href="https://jemdda2.github.io/Real-Estate-Website/" target="_black" rel="noreferrer noopener">Made by JisoonKim</a>

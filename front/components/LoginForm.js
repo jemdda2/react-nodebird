@@ -8,22 +8,22 @@ import useInput from '../hooks/useInput';
 
 
 const LoginForm = () => {
-    const [id, onChangeId] = useInput('');
-    const { isLoggingIn } = useSelector((state) => state.user);
+    const [email, onChangeEmail] = useInput('');
+    const { loginLoading } = useSelector((state) => state.user);
     const [password, onChangePassword] = useInput('');
     const dispatch = useDispatch();
 
     const onSubmitForm = useCallback((e) => {
         e.preventDefault();
-        dispatch(loginRequestAction({ id, password }))
-      }, [id, password]);
+        dispatch(loginRequestAction({ email, password }))
+      }, [email, password]);
 
     return (
         <Form onFinish={onSubmitForm} style={{ padding: '10px' }}>
             <div>
-                <label htmlFor="user-id">ID</label>
+                <label htmlFor="user-email">E-MAIL</label>
                 <br />
-                <Input name="user-id" value={id} onChange={onChangeId} required />
+                <Input name="user-email" value={email} onChange={onChangeEmail} required />
             </div>
             <div>
             <   label htmlFor="user-password">PASSWORD</label>
@@ -37,7 +37,7 @@ const LoginForm = () => {
                 />
             </div>
             <div style={{ marginTop: '10px' }}>
-                <Button type="primary" htmlType="submit" loading={isLoggingIn}>ログイン</Button>
+                <Button type="primary" htmlType="submit" loading={loginLoading}>ログイン</Button>
                 <Link href="/signup"><a><Button>会員登録</Button></a></Link>
             </div>
         </Form>
