@@ -1,3 +1,10 @@
+# 2020/06/22
+### CommentForm
+* onSubmitComment(ADD_COMMENT_REQUEST) -> sagas -> reducers(ADD_COMMENT_SUCCESS) -> CommentFormのuseEffectを実行
+* user reducers의 상태를 바꿀수 있는 액션을 만듬 -> post sagas에 addPost에 추가
+* 지울때는 filter을 사용
+* npm i immer 불편성
+
 # 2020/06/17
 ### Redux-sagaを使う理由
 * https://gracefullight.dev/2017/12/06/Why-redux-saga/
