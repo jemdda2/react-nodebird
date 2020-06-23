@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import { Card, Button, Avatar, Popover, List, Comment } from 'antd';
 import { RetweetOutlined, HeartTwoTone, HeartOutlined, MessageOutlined, EllipsisOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
+import Link from 'next/link';
 
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
+import FollowButton from './FollowButton';
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
@@ -56,11 +58,12 @@ const PostCard = ({ post }) => {
             <EllipsisOutlined />
           </Popover>,
         ]}
+        extra={id && <FollowButton post={post}/>}
       >
         <Card.Meta 
           avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
           title={post.User.nickname}
-          // description={<PostCardContent postData={post.content} />}
+          description={<PostCardContent postData={post.content} />}
         />
       </Card>
       {commentFormOpened && (
@@ -72,11 +75,15 @@ const PostCard = ({ post }) => {
             dataSource={post.Comments}
             renderItem={(item) => (
               <li>
-                <Comment>
+                <Comment
                   author={item.User.nickname}
-                  avatar={<Avatar>{item.User.nickname[0]}</Avatar>}
+                  avatar={(
+                    <Link href={{ pathname: '/user', query: { id: item.User.id } }} as={`/user/${item.User.id}`}>
+                      <a><Avatar>{item.User.nickname[0]}</Avatar></a>
+                    </Link>
+                  )}
                   content={item.content}
-                </Comment>
+                />
               </li>
             )}
           />

@@ -1,9 +1,18 @@
+# 2020/06/23
+### 기타
+* npm i faker 더미데이터 만들때 사용
+* placeholder.com 더미사진을 안쓰고 크기만 표시하고 싶을때
+* window.scrollY = 얼마나 내렸는지
+* document.documentElement.clientHeight = 화면 보이는 길이
+* document.documentElement.scrollHeight = 화면 총 길이
+* react virtualized = 무한스크롤할때 화면에것만 보여주고 나머지는 메모리로 빼주는 역활
+
 # 2020/06/22
 ### CommentForm
 * onSubmitComment(ADD_COMMENT_REQUEST) -> sagas -> reducers(ADD_COMMENT_SUCCESS) -> CommentFormのuseEffectを実行
 * user reducers의 상태를 바꿀수 있는 액션을 만듬 -> post sagas에 addPost에 추가
 * 지울때는 filter을 사용
-* npm i immer 불편성
+* npm i immer 불변성
 
 # 2020/06/17
 ### Redux-sagaを使う理由
@@ -11,7 +20,7 @@
 * LoginForm에서 로그인클릭 -> loginRequestAction실행(onSubmitForm) -> sagas/user login()、reducers/user LOG_IN_REQUEST 동시실행 -> login() 1초 후 성공하면 switch LOG_IN_SUCCESS 실행후 UserProfile로 넘어감
 
 ### function* ジェネレータ関数
-* https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Statements/function*
+* https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Statements/function*/
 
 
 # 2020/06/16

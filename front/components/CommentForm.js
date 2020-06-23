@@ -1,8 +1,9 @@
 import { Form, Input, Button } from 'antd';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
+import useInput from '../hooks/useInput';
 import { ADD_COMMENT_REQUEST } from '../reducers/post';
 
 const CommentForm = ({ post }) => {
@@ -41,7 +42,7 @@ const CommentForm = ({ post }) => {
       <Form.Item style={{ position: 'relative', margin: 8 }}>
           <Input.TextArea value={commentText} onChange={onChangeCommentText} rows={4} />
           <Button 
-            style={{ position: 'absolute', right: 0, bottom: -40, zIndex: 1 }} 
+            style={{ position: 'absolute', right: 0, bottom: -40 }} 
             type="primary" 
             htmlType="submit"
             loading={addCommentLoading}

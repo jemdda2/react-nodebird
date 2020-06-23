@@ -1,47 +1,58 @@
 import React, { useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
+import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { loginRequestAction  } from '../reducers/user';
 
 import useInput from '../hooks/useInput';
+import { LOG_IN_REQUEST } from '../reducers/user';
 
+const ButtonWrapper = styled.div`
+  margin-top: 10px;
+`;
+
+const FormWrapper = styled(Form)`
+  padding: 10px;
+`;
 
 const LoginForm = () => {
-    const [email, onChangeEmail] = useInput('');
-    const { loginLoading } = useSelector((state) => state.user);
-    const [password, onChangePassword] = useInput('');
-    const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const { loginLoading } = useSelector((state) => state.user);
+  const [email, onChangeEmail] = useInput('');
+  const [password, onChangePassword] = useInput('');
 
-    const onSubmitForm = useCallback((e) => {
-        e.preventDefault();
-        dispatch(loginRequestAction({ email, password }))
-      }, [email, password]);
+  const onSubmitForm = useCallback((e) => {
+      console.log(email, password);
+      dispatch({
+        type: LOG_IN_REQUEST,
+        data: { email, password },
+      });
+    }, [email, password]);
 
-    return (
-        <Form onFinish={onSubmitForm} style={{ padding: '10px' }}>
-            <div>
-                <label htmlFor="user-email">E-MAIL</label>
-                <br />
-                <Input name="user-email" value={email} onChange={onChangeEmail} required />
-            </div>
-            <div>
-            <   label htmlFor="user-password">PASSWORD</label>
-                <br />
-                <Input 
-                    name="user-password" 
-                    type="password" 
-                    value={password} 
-                    onChange={onChangePassword} 
-                    required 
-                />
-            </div>
-            <div style={{ marginTop: '10px' }}>
-                <Button type="primary" htmlType="submit" loading={loginLoading}>ログイン</Button>
-                <Link href="/signup"><a><Button>会員登録</Button></a></Link>
-            </div>
-        </Form>
-    );
+  return (
+    <FormWrapper onFinish={onSubmitForm}>
+      <div>
+        <label htmlFor="user-email">E-MAIL</label>
+        <br />
+        <Input name="user-email" value={email} onChange={onChangeEmail} required />
+      </div>
+      <div>
+        <label htmlFor="user-password">PASSWORD</label>
+          <br />
+          <Input 
+            name="user-password" 
+            type="password" 
+            value={password} 
+            onChange={onChangePassword} 
+            required 
+          />
+      </div>
+      <ButtonWrapper>
+        <Button type="primary" htmlType="submit" loading={loginLoading}>ログイン</Button>
+        <Link href="/signup"><a><Button>会員登録</Button></a></Link>
+      </ButtonWrapper>
+    </FormWrapper>
+  );
 };
 
 export default LoginForm;

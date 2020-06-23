@@ -1,4 +1,4 @@
-import produce from "immer";
+import produce from 'immer';
 
 export const initialState = {
   followLoading: false, // 팔로우 시도중
@@ -22,7 +22,7 @@ export const initialState = {
   me: null,
   signUpData: {},
   loginData: {},
-}
+};
 
 export const LOG_IN_REQUEST = 'LOG_IN_REQUEST';
 export const LOG_IN_SUCCESS = 'LOG_IN_SUCCESS';
@@ -48,7 +48,6 @@ export const UNFOLLOW_REQUEST = 'UNFOLLOW_REQUEST';
 export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS';
 export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
 
-// User Reducers의 상태를 바꿀수 있는 액션을 만듬
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
 
@@ -61,21 +60,47 @@ const dummyUser = (data) => ({
   Followers: [{ nickname: '부기초' }, { nickname: 'Chanho Lee' }, { nickname: 'neue zeal' }],
 });
 
-export const loginRequestAction = (data) => {
-    return {
-        type: LOG_IN_REQUEST,
-        data,
-    }
-};
+export const loginRequestAction = (data) => ({
+  type: LOG_IN_REQUEST,
+  data,
+});
 
-export const logoutRequestAction = () => {
-    return {
-        type: LOG_OUT_REQUEST,
-    }
-};
+export const logoutRequestAction = () => ({
+  type: LOG_OUT_REQUEST,
+});
 
 const reducer = (state = initialState, action) => produce(state, (draft) => {
   switch (action.type) {
+    case FOLLOW_REQUEST:
+      draft.followLoading = true;
+      draft.followError = null;
+      draft.followDone = false;
+      break;
+    case FOLLOW_SUCCESS:
+      draft.followLoading = false;
+      draft.me.Followings.push({ id: action.data });
+      draft.followDone = true;
+      break;
+    case FOLLOW_FAILURE:
+      draft.followLoading = false;
+      draft.followError = action.error;
+      break;
+
+    case UNFOLLOW_REQUEST:
+      draft.unfollowLoading = true;
+      draft.unfollowError = null;
+      draft.unfollowDone = false;
+      break;
+    case UNFOLLOW_SUCCESS:
+      draft.unfollowLoading = false;
+      draft.me.Followings = draft.me.Followings.filter((v) => v.id !== action.data);
+      draft.unfollowDone = true;
+      break;
+    case UNFOLLOW_FAILURE:
+      draft.unfollowLoading = false;
+      draft.unfollowError = action.error;
+      break;
+
     case LOG_IN_REQUEST:
       draft.logInLoading = true;
       draft.logInError = null;
