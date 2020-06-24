@@ -65,7 +65,7 @@ function* watchAddPost() {
 }
 
 function addCommentAPI() {
-
+  return axios.post(`/api/post/${data.postId}/comment`, data);
 }
 
 function* addComment(action) {

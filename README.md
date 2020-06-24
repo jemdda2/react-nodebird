@@ -1,3 +1,26 @@
+# 2020/06/24
+### back開発
+* npm i express
+* DB接続：npm i sequelize sequelize-cli mysql2
+* 初期設定：npx sequelize init
+
+### REST API
+* app.get -> 가져오기
+* app.post -> 생성하다
+* app.put -> 전체 수정
+* app.delete -> 제거
+* app.patch -> 부분 수정
+* app.options -> 찔러보기 (서버에 요청을 할수있는지 확인)
+* app.head -> 헤더만 가져오기
+* 애매할경우 post사용 예) 게시글 가져오면서 조회수 1을 올린다.
+* rest 지키는 회사는 드물다..
+
+### models
+* db.User.hasMany(db.Post); // User 1 : Post N
+* db.Post.belongsTo(db.User); // Post는 User가 속해있다(postテーブルにUserIdカラムを持つ)
+* db.Post.belongsToMany(db.Hashteg) // Post N : Hashteg N
+* 다대다 관계일 때는 중간 테이블에 양쪽 테이블의 값을 저장해줌
+
 # 2020/06/23
 ### 기타
 * npm i faker 더미데이터 만들때 사용
@@ -22,7 +45,6 @@
 ### function* ジェネレータ関数
 * https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Statements/function*/
 
-
 # 2020/06/16
 ### エラーメッセージ
 * Error: NodeBird(...): Nothing was returned from render. This usually means a return statement is missing. Or, to render nothing, return null.　(returnがない)
@@ -39,7 +61,6 @@
 * action -> dispatch -> reducer(switch)
 * reducer returnは新しいオブジェクト
 * store: stateとreducer
-
 
 # 2020/06/12
 ### AppLayout.js
