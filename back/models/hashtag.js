@@ -1,5 +1,3 @@
-const { DataTypes } = require("sequelize/types");
-
 module.exports = (sequelize, DataTypes) => {
 	const Hashtag = sequelize.define('Hashtag', { // MySQL에는 hashtags 테이블 생성
 		// id가 기본적으로 들어있다.
@@ -12,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 		collate: 'utf8mb4_general_ci', // 이모티콘 저장
 	});
 	Hashtag.associate = (db) => {
-		db.Hashtag.belongsToMany(db.Post) // Hashtag N : Post N
+		db.Hashtag.belongsToMany(db.Post, { through: 'PostHashtag' }); // Hashtag N : Post N
 	};
 	return Hashtag;
 };

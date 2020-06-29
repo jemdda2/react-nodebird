@@ -1,3 +1,10 @@
+# 2020/06/29
+### back開発
+* npx sequelize db:create dbカラム作成
+* DataGrip
+* npm i -D nodemon@2 
+* "dev": "nodemon app" package.json에 추가
+
 # 2020/06/24
 ### back開発
 * npm i express

@@ -1,5 +1,3 @@
-const { DataTypes } = require("sequelize/types");
-
 module.exports = (sequelize, DataTypes) => {
 	const User = sequelize.define('User', { // MySQL에는 users 테이블 생성
 		// id가 기본적으로 들어있다.
