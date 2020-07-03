@@ -1,12 +1,43 @@
+# 2020/07/02
+### ログイン2
+* 데이터 효율을 위해서 유저정보 포스트, 팔로워, 팔로잉은 id만 가져온다(전체내용을 가져오면 무거워짐)
+* lastId limit방식으로해야 가운데에서 지워져도 데이터가 안꼬임
+* npm i morgan 프론트엔드에서 벡엔드로 어떤 요청을 보냈는지 콘설창에 뜸
+* routes 다른모델 포함하고 싶을때 include 취득하고싶은 칼럼지정하고싶을때 attributes: [] 
+
+# 2020/07/02
+### ログイン1
+* sagas/index.js axios.defaults.baseURLを使うと 'http://localhost:' 省略可能
+* npm i passport passport-local ログイン管理
+* async일때는 꼭 try catch를 해줌
+* session, cookie이 필요한이유：로그인하면 브러우저와 서버가 같은정보를 들고있어야함
+* 서버쪽에 들고있는건 session、프론트쪽에는 cookie로 랜덤한문자를 들고있어서 보안위협을 최소화한다
+* npm i express-session 
+* npm i cookie-parser
+* npm i dotenv 중요정보관리 db passwordなど
+* Response Headers의 Set-Cookie가 유저정보
+* middlewares.js 로그인했는지 안했는지 검사하는 미들웨어
+* next(); 다음 미들웨어로감 next(err);일땐 에러를 리턴
+* 도메인이 다르면 쿠키가 전달안됌(3060 -> 3065) app.js use.cors에 credentials: true 추가해서 해결
+* saga/index.js에 axios.defaults.withCredentials = true 추가해서 공통으로 적용
+
 # 2020/06/29
-### back開発
+### back開発3
+* npm i bcrypt パスワード暗号化
+* CORS에러 브라우저에서 벡엔드 서버갈때만 생김
+* proxy 브라우저 -> 프론트서버 -> 벡엔드서버
+* 브라우저에서 접근허용：res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3060');
+* npm i cors 위에처럼 안쓰고 이걸사용
+
+# 2020/06/29
+### back開発2
 * npx sequelize db:create dbカラム作成
 * DataGrip
 * npm i -D nodemon@2 
 * "dev": "nodemon app" package.json에 추가
 
 # 2020/06/24
-### back開発
+### back開発1
 * npm i express
 * DB接続：npm i sequelize sequelize-cli mysql2
 * 初期設定：npx sequelize init

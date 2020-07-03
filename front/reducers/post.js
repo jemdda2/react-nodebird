@@ -1,8 +1,19 @@
-import shortId from 'shortid';
 import produce from 'immer';
-import faker from 'faker';
 
 export const initialState = {
+  mainPosts: [],
+  singlePost: null,
+  imagePaths: [],
+  hasMorePosts: true,
+  likePostLoading: false,
+  likePostDone: false,
+  likePostError: null,
+  unlikePostLoading: false,
+  unlikePostDone: false,
+  unlikePostError: null,
+  loadPostsLoading: false,
+  loadPostsDone: false,
+  loadPostsError: null,
   addPostLoading: false,
   addPostDone: false,
   addPostError: null,
@@ -12,67 +23,16 @@ export const initialState = {
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
-  loadPostsLoading: false,
-  loadPostsDone: false,
-  loadPostsError: null,
-  mainPosts: [{
-    id: 1,
-    User: {
-      id: 1,
-      nickname: '제로초',
-    },
-    content: '첫 번째 게시글 #해시태그 #익스프레스',
-    Images: [{
-      id: shortId.generate(),
-      src: 'https://bookthumb-phinf.pstatic.net/cover/137/995/13799585.jpg?udate=20180726',
-    }, {
-      id: shortId.generate(),
-      src: 'https://gimg.gilbut.co.kr/book/BN001958/rn_view_BN001958.jpg',
-    }, {
-      id: shortId.generate(),
-      src: 'https://gimg.gilbut.co.kr/book/BN001998/rn_view_BN001998.jpg',
-    }],
-    Comments: [{
-      id: shortId.generate(),
-      User: {
-        id: shortId.generate(),
-        nickname: 'nero',
-      },
-      content: '우와 개정판이 나왔군요~',
-    }, {
-      id: shortId.generate(),
-      User: {
-        id: shortId.generate(),
-        nickname: 'hero',
-      },
-      content: '얼른 사고싶어요~',
-    }],
-  }],
-  imagePaths: [],
-  hasMorePost: true,
+  loadPostLoading: false,
+  loadPostDone: false,
+  loadPostError: null,
+  uploadImagesLoading: false,
+  uploadImagesDone: false,
+  uploadImagesError: null,
+  retweetLoading: false,
+  retweetDone: false,
+  retweetError: null,
 };
-
-// 무한스크롤
-export const generateDummyPost = (number) =>   Array(number).fill().map(() => ({
-  id: shortId.generate(),
-  User: {
-    id: shortId.generate(),
-    nickname: faker.name.findName(),
-  },
-  content: faker.lorem.paragraph(),
-  Images: [{
-    src: faker.image.image(),
-  }],
-  Comments: [{
-    User: {
-      id: shortId.generate(),
-      nickname: faker.name.findName(),
-    },
-    content: faker.lorem.sentence(),
-  }],
-}));
-
-// initialState.mainPosts = initialState.mainPosts.concat(generateDummyPost(10));
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
@@ -90,34 +50,14 @@ export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
-// export const addPost = (data) = ({
-//   type: ADD_POST_REQUEST,
-//   data,
-// });
-
-// export const addComment = (data) = ({
-//   type: ADD_COMMENT_REQUEST,
-//   data,
-// });
-
-const dummyPost = (data) => ({
-  id: data.id,
-  content: data.content,
-  User: {
-    id: 1,
-    nickname: '제로초',
-  },
-  Images: [],
-  Comments: [],
+export const addPost = (data) => ({
+  type: ADD_POST_REQUEST,
+  data,
 });
 
-const dummyComment = (data) => ({
-  id: shortId.generate(),
-  content: data,
-  User: {
-    id: 1,
-    nickname: '제로초',
-  },
+export const addComment = (data) => ({
+  type: ADD_COMMENT_REQUEST,
+  data,
 });
 
 // 이전 상태를 액션을 통해 다음 상태로 만들어내는 함수(불변성은 지키면서)
@@ -138,6 +78,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.loadPostsLoading = false;
       draft.loadPostsError = action.error;
       break;
+
     case ADD_POST_REQUEST:
       draft.addPostLoading = true;
       draft.addPostDone = false;
@@ -146,12 +87,13 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_POST_SUCCESS:
       draft.addPostLoading = false;
       draft.addPostDone = true;
-      draft.mainPosts.unshift(dummyPost(action.data));
+      draft.mainPosts.unshift(action.data);
       break;
     case ADD_POST_FAILURE:
       draft.addPostLoading = true;
       draft.addPostError = action.error;
       break;
+
     case REMOVE_POST_REQUEST:
       draft.removePostLoading = true;
       draft.removePostDone = false;
@@ -166,32 +108,19 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
       draft.removePostLoading = false;
       draft.removePostError = action.error;
       break;
+
     case ADD_COMMENT_REQUEST:
-      draft.addCommentLoading = true;
-      draft.addCommentDone = false;
-      draft.addCommentError = null;
+      draft.isAddingComment  = true;
+      draft.commentAdded  = false;
       break;
-    case ADD_COMMENT_SUCCESS: {
-      const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-      post.Comments.unshift(dummyComment(action.data.content));
-      draft.addCommentLoading = false;
-      draft.addCommentDone = true;
+    case ADD_COMMENT_SUCCESS: 
+      draft.isAddingComment = false;
+      draft.commentAdded = true;
+      const postIndex = draft.mainPosts.findIndex(v => v.id === action.data.postId);
+      draft.mainPosts[postIndex].Comments.push(action.data.comment);
       break;
-      // const postIndex = state.mainPosts.findIndex((v) => v.id === action.data.postId);
-      // const post = { ...state.mainPosts[postIndex] };
-      // post.Comments = [dummyComment(action.data.content), ...post.Comments];
-      // const mainPosts = [...state.mainPosts];
-      // mainPosts[postIndex] = post;
-      // return {
-      //   ...state,
-      //   mainPosts,
-      //   addCommentLoading: false,
-      //   addCommentDone: true,
-      // };
-    }
     case ADD_COMMENT_FAILURE:
-      draft.addCommentLoading = false;
-      draft.addCommentError = action.error;
+      draft.isAddingComment = false;
       break;
     default:
       break;

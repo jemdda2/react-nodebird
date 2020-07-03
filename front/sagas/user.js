@@ -1,7 +1,10 @@
-import { all, delay, fork, put, takeEvery, takeLatest } from 'redux-saga/effects';
+import { all, delay, fork, put, takeEvery, takeLatest, call } from 'redux-saga/effects';
 import axios from 'axios';
 
 import {
+  LOAD_USER_FAILURE,
+  LOAD_USER_REQUEST,
+  LOAD_USER_SUCCESS,
   LOG_IN_FAILURE,
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
@@ -19,37 +22,60 @@ import {
   UNFOLLOW_SUCCESS,
 } from '../reducers/user';
 
-function loginAPI() {
+function loadUserAPI() {
   // 서버에 요청을 보내는 부분 * 붙이지 말 것
-  return axios.post('/login');
+  return axios.get('/user');
 }
 
-function* login() {
+function* loadUser(action) {
   try {
-    // yield call(loginAPI);
-    yield delay(1000);
+    const result = yield call(loadUserAPI, action.data);
     yield put({ // put은 dispatch 동일
-      type: LOG_IN_SUCCESS,
+      type: LOAD_USER_SUCCESS,
+      data: result.data,
     });
-  } catch (e) { // loginAPI 실패
-    console.error(e);
+  } catch (err) { // loginAPI 실패
+    console.error(err);
     yield put({
-      type: LOG_IN_FAILURE,
+      type: LOAD_USER_FAILURE,
+      error: err.response.data,
     });
   }
 }
 
-function signUpAPI() {
-  // 서버에 요청을 보내는 부분
-  return axios.post('/login');
+function loginAPI(data) {
+  // 서버에 요청을 보내는 부분 * 붙이지 말 것
+  return axios.post('/user/login', data);
 }
 
-function* signUp() {
+function* login(action) {
   try {
-    // yield call(signUpAPI);
-    yield delay(1000);
+    const result = yield call(loginAPI, action.data);
+    yield put({ // put은 dispatch 동일
+      type: LOG_IN_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) { // loginAPI 실패
+    console.error(err);
+    yield put({
+      type: LOG_IN_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function signUpAPI(data) {
+  // 서버에 요청을 보내는 부분
+  return axios.post('/user', data);
+}
+
+function* signUp(action) {
+  try {
+    const result = yield call(signUpAPI, action.data);
+    console.log(result);
     yield put({ // put은 dispatch 동일
       type: SIGN_UP_SUCCESS,
+      data: result.data,
     });
   } catch (e) { // loginAPI 실패
     console.error(e);
@@ -62,7 +88,7 @@ function* signUp() {
 
 function followAPI() {
   // 서버에 요청을 보내는 부분
-  return axios.post('/api/follow');
+  return axios.post('/follow');
 }
 
 function* follow(action) {
@@ -84,7 +110,7 @@ function* follow(action) {
 
 function unfollowAPI() {
   // 서버에 요청을 보내는 부분
-  return axios.post('/api/unfollow');
+  return axios.post('/unfollow');
 }
 
 function* unfollow(action) {
@@ -105,13 +131,12 @@ function* unfollow(action) {
 }
 
 function logOutAPI() {
-  return axios.post('/api/logout');
+  return axios.post('/user/logout');
 }
 
 function* logOut() {
   try {
-    // const result = yield call(logOutAPI);
-    yield delay(1000);
+    yield call(logOutAPI);
     yield put({
       type: LOG_OUT_SUCCESS,
     });
@@ -123,6 +148,9 @@ function* logOut() {
   }
 }
 
+function* watchLoadUser() {
+  yield takeEvery(LOAD_USER_REQUEST, loadUser);
+}
 function* watchFollow() {
   yield takeEvery(FOLLOW_REQUEST, follow);
 }
@@ -142,6 +170,7 @@ function* watchLogOut() {
 
 export default function* userSaga() {
   yield all([
+    fork(watchLoadUser),
     fork(watchFollow),
     fork(watchUnfollow),
     fork(watchLogin),

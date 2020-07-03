@@ -10,7 +10,7 @@ const NicknameeEditForm = () => {
   const [nickname, onChangeNickname] = useInput(me?.nickname || '');
   const dispatch = useDispatch();
 
-  const ouSubmit = useCallback(() => {
+  const onSubmit = useCallback(() => {
     dispatch({
       type: CHANGE_NICKNAME_REQUEST,
       data: nickname,

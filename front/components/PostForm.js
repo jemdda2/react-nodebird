@@ -2,7 +2,7 @@ import React, { useCallback, useState, useEffect, useRef } from 'react';
 import { Form, Input, Button } from 'antd';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { ADD_POST_REQUEST } from '../reducers/post';
+import { addPost } from '../reducers/post';
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -21,13 +21,8 @@ const PostForm = () => {
   }, [addPostDone]);
 
   const onSubmitForm = useCallback(() => {
-    dispatch({
-      type: ADD_POST_REQUEST,
-      data: {
-        text,
-      },
-    });
-  }, []);
+    dispatch(addPost(text));
+  }, [text]);
 
   const onChangeText = useCallback((e) => {
     setText(e.target.value);
