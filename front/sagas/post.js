@@ -1,20 +1,66 @@
 import { all, delay, fork, put, takeLatest, throttle, call } from 'redux-saga/effects';
 import axios from 'axios';
 import {
+  LIKE_POST_FAILURE,
+  LIKE_POST_REQUEST,
+  LIKE_POST_SUCCESS,
+  UNLIKE_POST_FAILURE,
+  UNLIKE_POST_REQUEST,
+  UNLIKE_POST_SUCCESS,
   ADD_COMMENT_FAILURE,
   ADD_COMMENT_REQUEST,
   ADD_COMMENT_SUCCESS,
   ADD_POST_FAILURE,
   ADD_POST_REQUEST,
   ADD_POST_SUCCESS,
-  LOAD_POSTS_FAILURE, 
-  LOAD_POSTS_REQUEST, 
+  LOAD_POSTS_FAILURE,
+  LOAD_POSTS_REQUEST,
   LOAD_POSTS_SUCCESS,
   REMOVE_POST_FAILURE,
   REMOVE_POST_REQUEST,
   REMOVE_POST_SUCCESS,
 } from '../reducers/post';
 import { REMOVE_POST_OF_ME } from '../reducers/user';
+
+function likePostAPI(data) {
+  return axios.patch(`/post/${data}/like`)
+}
+
+function* likePost(action) {
+  try {
+    const result = yield call(likePostAPI, action.data);
+    yield put({
+      type: LIKE_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LIKE_POST_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function unlikePostAPI(data) {
+  return axios.delete(`/post/${data}/unlike`)
+}
+
+function* unlikePost(action) {
+  try {
+    const result = yield call(unlikePostAPI, action.data);
+    yield put({
+      type: UNLIKE_POST_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: UNLIKE_POST_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
 
 function loadPostsAPI(data) {
   return axios.get('/posts', data)
@@ -28,6 +74,7 @@ function* loadPosts(action) {
       data: result.data,
     });
   } catch (err) {
+    console.error(err);
     yield put({
       type: LOAD_POSTS_FAILURE,
       error: err.response.data,
@@ -110,12 +157,21 @@ function* removePost(action) {
   }
 }
 
-function* watchLoadPosts() {
-  yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
+
+function* watchLikePost() {
+  yield takeLatest(LIKE_POST_REQUEST, likePost);
+}
+
+function* watchUnlikePost() {
+  yield takeLatest(UNLIKE_POST_REQUEST, unlikePost);
 }
 
 function* watchAddPost() {
   yield takeLatest(ADD_POST_REQUEST, addPost);
+}
+
+function* watchLoadPosts() {
+  yield throttle(5000, LOAD_POSTS_REQUEST, loadPosts);
 }
 
 function* watchRemovePost() {
@@ -128,8 +184,10 @@ function* watchAddComment() {
 
 export default function* postSaga() {
   yield all([
-    fork(watchLoadPosts),
+    fork(watchLikePost),
+    fork(watchUnlikePost),
     fork(watchAddPost),
+    fork(watchLoadPosts),
     fork(watchRemovePost),
     fork(watchAddComment),
   ]);

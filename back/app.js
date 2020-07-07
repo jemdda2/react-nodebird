@@ -23,7 +23,7 @@ passportConfig();
 app.use(morgan('dev'));
 app.use(cors({
 	origin: 'http://localhost:3000', // 모든요청 허용
-	credentials: true, // 키기도 전달 허용
+	credentials: true, // 쿠키도 전달 허용
 })); 
 
 // 프론트에서 온 데이터를 req.body에 넣어준다
