@@ -1,4 +1,5 @@
 const express = require('express');
+const multer = require('multer');
 
 const { Post, Image, Comment, User } = require('../models');
 const { isLoggedIn  } = require('./middlewares');
@@ -36,6 +37,18 @@ router.post('/', isLoggedIn, async (req, res, next) => {
 	}
 });
 
+const upload = multer({
+
+});
+router.post('/images', isLoggedIn, async (req, res, next) => { // POST /post/images
+	try{
+
+	} catch(error) {
+		console.error(error);
+		next(error);
+	}
+})
+
 router.post('/:postId/comment', isLoggedIn, async (req, res, next) => { // POST /post/1/comment
 	try{
 		const post = await Post.findOne({
@@ -63,7 +76,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => { // POST 
 	}
 });
 
-router.patch('/:postId/like', async (req, res, next) => { // PATCH /post/1/like
+router.patch('/:postId/like', isLoggedIn, async (req, res, next) => { // PATCH /post/1/like
 	try {
 		const post = await Post.findOne({ where: { id: req.params.postId }});
 		if (!post) {
@@ -77,7 +90,7 @@ router.patch('/:postId/like', async (req, res, next) => { // PATCH /post/1/like
 	}
 });
 
-router.delete('/:postId/unlike', async (req, res, next) => { // DELETE /post/1/like
+router.delete('/:postId/unlike', isLoggedIn, async (req, res, next) => { // DELETE /post/1/like
 	try {
 		const post = await Post.findOne({ where: { id: req.params.postId }});
 		if (!post) {
@@ -91,8 +104,19 @@ router.delete('/:postId/unlike', async (req, res, next) => { // DELETE /post/1/l
 	}
 });
 
-router.delete('/', (req, res) => {
-	res.json({ id: 1 });
+router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELETE /post/1
+	try {
+		await Post.destroy({
+			where: { 
+				id: req.params.postId,
+				UserId: req.user.id,
+			},
+		});
+		res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
+	} catch (error) {
+		console.error(error);
+		next(error);
+	}
 });
 
 module.exports = router;

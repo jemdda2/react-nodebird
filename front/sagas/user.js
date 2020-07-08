@@ -20,7 +20,103 @@ import {
   UNFOLLOW_FAILURE,
   UNFOLLOW_REQUEST,
   UNFOLLOW_SUCCESS,
+  LOAD_FOLLOWERS_FAILURE,
+  LOAD_FOLLOWERS_REQUEST,
+  LOAD_FOLLOWERS_SUCCESS,
+  LOAD_FOLLOWINGS_FAILURE,
+  LOAD_FOLLOWINGS_REQUEST,
+  LOAD_FOLLOWINGS_SUCCESS,
+  CHANGE_NICKNAME_FAILURE,
+  CHANGE_NICKNAME_REQUEST,
+  CHANGE_NICKNAME_SUCCESS,
+  REMOVE_FOLLOWER_FAILURE,
+  REMOVE_FOLLOWER_REQUEST,
+  REMOVE_FOLLOWER_SUCCESS
 } from '../reducers/user';
+
+function removeFollowerAPI(data) {
+  // 서버에 요청을 보내는 부분 * 붙이지 말 것
+  return axios.delete(`/user/follower/${data}`);
+}
+
+function* removeFollower(action) {
+  try {
+    const result = yield call(removeFollowerAPI, action.data);
+    yield put({ // put은 dispatch 동일
+      type: REMOVE_FOLLOWER_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: REMOVE_FOLLOWER_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function loadFollowersAPI(data) {
+  // 서버에 요청을 보내는 부분 * 붙이지 말 것
+  return axios.get('/user/followers', data);
+}
+
+function* loadFollowers(action) {
+  try {
+    const result = yield call(loadFollowersAPI, action.data);
+    yield put({ // put은 dispatch 동일
+      type: LOAD_FOLLOWERS_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_FOLLOWERS_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function loadFollowingsAPI(data) {
+  // 서버에 요청을 보내는 부분 * 붙이지 말 것
+  return axios.get('/user/followings', data);
+}
+
+function* loadFollowings(action) {
+  try {
+    const result = yield call(loadFollowingsAPI, action.data);
+    yield put({ // put은 dispatch 동일
+      type: LOAD_FOLLOWINGS_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: LOAD_FOLLOWINGS_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function changeNicknameAPI(data) {
+  // 서버에 요청을 보내는 부분 * 붙이지 말 것
+  return axios.patch('/user/nickname', { nickname: data });
+}
+
+function* changeNickname(action) {
+  try {
+    const result = yield call(changeNicknameAPI, action.data);
+    yield put({ // put은 dispatch 동일
+      type: CHANGE_NICKNAME_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) {
+    console.error(err);
+    yield put({
+      type: CHANGE_NICKNAME_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
 
 function loadUserAPI() {
   // 서버에 요청을 보내는 부분 * 붙이지 말 것
@@ -77,55 +173,53 @@ function* signUp(action) {
       type: SIGN_UP_SUCCESS,
       data: result.data,
     });
-  } catch (e) { // loginAPI 실패
-    console.error(e);
+  } catch (err) { // loginAPI 실패
+    console.error(err);
     yield put({
       type: SIGN_UP_FAILURE,
-      error: e,
+      error: err.response.data,
     });
   }
 }
 
-function followAPI() {
+function followAPI(data) {
   // 서버에 요청을 보내는 부분
-  return axios.post('/follow');
+  return axios.patch(`/user/${data}/follow`);
 }
 
 function* follow(action) {
   try {
-    // yield call(signUpAPI);
-    yield delay(1000);
+    const result = yield call(followAPI, action.data);
     yield put({ // put은 dispatch 동일
       type: FOLLOW_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
-  } catch (e) { // loginAPI 실패
-    console.error(e);
+  } catch (err) { // loginAPI 실패
+    console.error(err);
     yield put({
       type: FOLLOW_FAILURE,
-      error: e,
+      error: err.response.data,
     });
   }
 }
 
-function unfollowAPI() {
+function unfollowAPI(data) {
   // 서버에 요청을 보내는 부분
-  return axios.post('/unfollow');
+  return axios.delete(`/user/${data}/follow`);
 }
 
 function* unfollow(action) {
   try {
-    // yield call(signUpAPI);
-    yield delay(1000);
+    const result = yield call(unfollowAPI, action.data);
     yield put({ // put은 dispatch 동일
       type: UNFOLLOW_SUCCESS,
-      data: action.data,
+      data: result.data,
     });
-  } catch (e) { // loginAPI 실패
-    console.error(e);
+  } catch (err) { // loginAPI 실패
+    console.error(err);
     yield put({
       type: UNFOLLOW_FAILURE,
-      error: e,
+      error: err.response.data,
     });
   }
 }
@@ -141,6 +235,7 @@ function* logOut() {
       type: LOG_OUT_SUCCESS,
     });
   } catch (err) {
+    console.error(err);
     yield put({
       type: LOG_OUT_FAILURE,
       error: err.response.data,
@@ -148,6 +243,18 @@ function* logOut() {
   }
 }
 
+function* watchRemoveFollower() {
+  yield takeEvery(REMOVE_FOLLOWER_REQUEST, removeFollower);
+}
+function* watchLoadFollowers() {
+  yield takeEvery(LOAD_FOLLOWERS_REQUEST, loadFollowers);
+}
+function* watchLoadFollowings() {
+  yield takeEvery(LOAD_FOLLOWINGS_REQUEST, loadFollowings);
+}
+function* watchChangeNickname() {
+  yield takeEvery(CHANGE_NICKNAME_REQUEST, changeNickname);
+}
 function* watchLoadUser() {
   yield takeEvery(LOAD_USER_REQUEST, loadUser);
 }
@@ -170,6 +277,11 @@ function* watchLogOut() {
 
 export default function* userSaga() {
   yield all([
+    fork(watchRemoveFollower),
+    fork(watchLoadFollowings),
+    fork(watchLoadFollowers),
+    fork(watchChangeNickname),
+    fork(watchChangeNickname),
     fork(watchLoadUser),
     fork(watchFollow),
     fork(watchUnfollow),

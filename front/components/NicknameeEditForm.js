@@ -15,18 +15,16 @@ const NicknameeEditForm = () => {
       type: CHANGE_NICKNAME_REQUEST,
       data: nickname,
     });
-  });
+  }, [nickname]);
 
   return (
-    <Form
-      style={{ marginBottom: '20px', border: '1px solid #d9d9d9', padding: '20px' }}
-      onFinish={onSubmit}
-    >
+    <Form style={{ marginBottom: '20px', border: '1px solid #d9d9d9', padding: '20px' }}>
       <Input.Search 
         value={nickname} 
         onChange={onChangeNickname}
-        addonBefore="NickName" 
-        enterButton="修正" 
+        addonBefore="NickName"
+        enterButton="修正"
+        onSearch={onSubmit}
       />
     </Form>
   );

@@ -15,7 +15,7 @@ router.get('/', async (req, res, next) => { // GET /posts
       }, {
         model: Comment,
         include: [{
-          model: User,
+          model: User,　// 댓글 작성자
           attributes: ['id', 'nickname'],
           order: [['createdAt', 'DESC']],
         }],
@@ -35,7 +35,6 @@ router.get('/', async (req, res, next) => { // GET /posts
       }],
 		});
 		console.log(posts);
-		
 		res.status(200).json(posts);
 	} catch (error) {
 		console.error(error);

@@ -144,7 +144,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case REMOVE_POST_SUCCESS:
       draft.removePostLoading = false;
       draft.removePostDone = true;
-      draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data);
+      draft.mainPosts = draft.mainPosts.filter((v) => v.id !== action.data.PoistId);
       break;
     case REMOVE_POST_FAILURE:
       draft.removePostLoading = false;
@@ -154,12 +154,13 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case ADD_COMMENT_REQUEST:
       draft.isAddingComment  = true;
       draft.commentAdded  = false;
+      draft.addCommentError = null;
       break;
     case ADD_COMMENT_SUCCESS: 
-      draft.isAddingComment = false;
-      draft.commentAdded = true;
-      const postIndex = draft.mainPosts.findIndex(v => v.id === action.data.postId);
-      draft.mainPosts[postIndex].Comments.push(action.data.comment);
+    const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+    post.Comments.unshift(action.data);
+    draft.addCommentLoading = false;
+    draft.addCommentDone = true;
       break;
     case ADD_COMMENT_FAILURE:
       draft.isAddingComment = false;
