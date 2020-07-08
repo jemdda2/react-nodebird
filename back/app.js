@@ -10,7 +10,7 @@ const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 const db = require('./models');
 const passportConfig = require('./passport');
-
+const path = require('path');
 dotenv.config();
 const app = express();
 db.sequelize.sync()
@@ -26,6 +26,7 @@ app.use(cors({
 	credentials: true, // 쿠키도 전달 허용
 })); 
 
+app.use('/', express.static(path.join(__dirname, 'uploads')))
 // 프론트에서 온 데이터를 req.body에 넣어준다
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

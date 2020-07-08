@@ -1,6 +1,8 @@
 # 2020/07/08
 ### サーバーへイミージファイルを送る時
 * npm i multer：encType="multipart/form-data"形式など。。routerにインポート
+* const fs = require('fs')：フォルダ作成可能
+* (express.static('/', path.join(__dirname, 'uploads')))を使うとOSに合わせて自動でpath設定
 
 # 2020/07/02
 ### ログイン2
