@@ -3,7 +3,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { Post, Image, Comment, User } = require('../models');
+const { Post, Image, Comment, User, Hashtag } = require('../models');
 const { isLoggedIn  } = require('./middlewares');
 
 const router = express.Router();
@@ -31,10 +31,17 @@ const upload = multer({
 
 router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
 	try{
+		const hashtags = req.body.content.match(/#[^\s#]+/g);
 		const post = await Post.create({
 			content: req.body.content,
 			UserId: req.user.id,
 		});
+		if (hashtags) {
+			const result = await Promise.all(hashtags.map((tag) => Hashtag.findOrCreate({
+				where: { name: tag.slice(1).toLowerCase() },
+			})));
+			await post.addHashtags(result.map((v) => v[0]));
+		}
 		if (req.body.image) {
 			if (Array.isArray(req.body.image)) { // イメージを複数UPLOADをする場合　image: [text1.png, text2.png]
 				const images = await Promise.all(req.body.image.map((image) => Image.create({ src: image })));
@@ -140,6 +147,37 @@ router.delete('/:postId', isLoggedIn, async (req, res, next) => { // DELETE /pos
 		});
 		res.status(200).json({ PostId: parseInt(req.params.postId, 10) });
 	} catch (error) {
+		console.error(error);
+		next(error);
+	}
+});
+
+router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => { // POST /post/1/retweet
+	try{
+		const post = await Post.findOne({
+			where: { id: req.params.postId },
+			include: [{
+				model: Post,
+				as: 'Retweet',
+			}],
+		});
+		if (!post) {
+			return res.status(403).send('存在しない投稿です。');
+		}
+		const comment = await Comment.create({
+			content: req.body.content,
+			PostId: parseInt(req.params.postId, 10),
+			UserId: req.user.id,
+		});
+		const fullComment = await Comment.findOne({
+			where: { id: comment.id },
+			include: [{
+				model: User,
+				attributes: ['id', 'nickname'],
+			}],
+		})
+		res.status(200).json(fullComment);
+	} catch(error) {
 		console.error(error);
 		next(error);
 	}
