@@ -89,6 +89,7 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case RETWEET_SUCCESS: {
       draft.retweetLoading = false;
       draft.retweetDone = true;
+      draft.mainPosts.unshift(action.data);
       break;
     }
     case RETWEET_FAILURE:
@@ -156,8 +157,8 @@ const reducer = (state = initialState, action) => produce(state, (draft) => {
     case LOAD_POSTS_SUCCESS:
       draft.loadPostsLoading = false;
       draft.loadPostsDone = true;
-      draft.mainPosts = action.data.concat(draft.mainPosts); // 10개씩 불러오기
-      draft.hasMorePosts = draft.mainPosts.length < 50; // false인경우 안가져오겠다
+      draft.mainPosts = draft.mainPosts.concat(action.data); // 10개씩 불러오기
+      draft.hasMorePosts = draft.mainPosts.length === 10; // false인경우 안가져오겠다
       break;
     case LOAD_POSTS_FAILURE:
       draft.loadPostsLoading = false;

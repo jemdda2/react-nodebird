@@ -126,7 +126,6 @@ router.patch('/:userId/follow', isLoggedIn, async (req, res, next) => { // PATCH
 			res.status(403).send('없는 사람은 팔로우할수 없습니다.');
 		}
 		await user.addFollowers(req.user.id);
-		console.log(req.user.id);
 		res.status(200).json({ UserId: parseInt(req.params.userId, 10) });
 	} catch (error) {
 		console.error(error);

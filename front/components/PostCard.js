@@ -20,7 +20,7 @@ import {
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
-  const { removePostLoading } = useSelector((state) => state.post);
+  const { removePostLoading, retweetError } = useSelector((state) => state.post);
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const id = useSelector((state) => state.user.me?.id);
 
@@ -95,18 +95,33 @@ const PostCard = ({ post }) => {
             <EllipsisOutlined />
           </Popover>,
         ]}
+        title={post.RetweetId ? `${post.User.nickname}さんがリツイートいたします。` : null}
         extra={id && <FollowButton post={post}/>}
       >
-        <Card.Meta 
-          avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
-          title={post.User.nickname}
-          description={<PostCardContent postData={post.content} />}
-        />
+        {post.RetweetId && post.Retweet
+          ? (
+            <Card
+              cover={post.Retweet.Images[0] && <PostImages images={post.Retweet.Images} />}
+            >
+              <Card.Meta 
+                avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
+                title={post.User.nickname}
+                description={<PostCardContent postData={post.Retweet.content} />}
+            />
+            </Card>
+          )
+          : (
+            <Card.Meta 
+              avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+              title={post.User.nickname}
+              description={<PostCardContent postData={post.content} />}
+            />
+          )}
       </Card>
       {commentFormOpened && (
         <div>
-          <CommentForm post={post}/>
-          <List 
+          <CommentForm post={post} />
+          <List
             header={`${post.Comments.length}개의 댓글`}
             itemLayout="horizontal"
             dataSource={post.Comments}
@@ -123,7 +138,7 @@ const PostCard = ({ post }) => {
         </div>
       )}
     </div>
-  )
+  );
 };
 
 PostCard.propTypes = {
@@ -135,7 +150,9 @@ PostCard.propTypes = {
     Comments: PropTypes.arrayOf(PropTypes.object),
     Images: PropTypes.arrayOf(PropTypes.object),
     Likers: PropTypes.arrayOf(PropTypes.object),
-  }), 
-}
+    RetweetId: PropTypes.number,
+    Retweet: PropTypes.objectOf(PropTypes.any),
+  }).isRequired, 
+};
 
 export default PostCard;

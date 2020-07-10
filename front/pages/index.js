@@ -11,7 +11,13 @@ import { LOAD_USER_REQUEST } from '../reducers/user';
 const Home = () => {
   const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
-  const { mainPosts, hasMorePost, loadPostsLading } = useSelector(state => state.post);
+  const { mainPosts, hasMorePosts, loadPostsLading, retweetError } = useSelector(state => state.post);
+
+  useEffect(() => {
+    if (retweetError) {
+      alert(retweetError);
+    }
+  }, [retweetError]);
 
   useEffect(() => {
     dispatch({
@@ -25,12 +31,13 @@ const Home = () => {
   useEffect(() => {
     // 스크롤이 어디까지 왔는지 판단
     function onScroll() {
-      if (window.screenY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
-        if (hasMorePost && !loadPostsLading) {
+      if (window.scrollY + document.documentElement.clientHeight > document.documentElement.scrollHeight - 300) {
+        if (hasMorePosts && !loadPostsLading) {
+          const lastId = mainPosts[mainPosts.length - 1]?.id;
           dispatch({
             type: LOAD_POSTS_REQUEST,
-            data: mainPosts[mainPosts.length - 1].id,
-          })
+            lastId,
+          });
         }
       }
     }
@@ -38,7 +45,7 @@ const Home = () => {
     return () => {
       window.removeEventListener('scroll', onScroll);
     }
-  }, [mainPosts, hasMorePost, loadPostsLading])
+  }, [hasMorePosts, loadPostsLading, mainPosts])
 
   return (
     <AppLayout>

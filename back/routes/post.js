@@ -68,7 +68,16 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
         model: User, // 좋아요 누른 사람
         as: 'Likers',
         attributes: ['id'],
-      }]
+      }, {
+				model: Post,
+				as: 'Retweet',
+				include: [{
+					model: User,
+					attributes: ['id', 'nickname'],
+				}, {
+					model: Image,
+				}]
+			}]
     })
 		res.status(200).json(fullPost);
 	} catch(error) {
@@ -164,19 +173,49 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => { // POST 
 		if (!post) {
 			return res.status(403).send('存在しない投稿です。');
 		}
-		const comment = await Comment.create({
-			content: req.body.content,
-			PostId: parseInt(req.params.postId, 10),
-			UserId: req.user.id,
+		if (req.user.id === post.UserId || (post.Retweet && post.Retweet.UserId === req.user.id)) {
+			return res.status(403).send('自分の投稿にはリツイート出来ません。')
+		}
+		const retweetTargetId = post.RetweetId || post.id;
+		const exPost = await Post.findOne({
+			where: {
+				UserId: req.user.id,
+				RetweetId: retweetTargetId,
+			},
 		});
-		const fullComment = await Comment.findOne({
-			where: { id: comment.id },
+		if (exPost) {
+			return res.status(403).send('既にリツイートされています。')
+		}
+		const retweet = await Post.create({
+			UserId: req.user.id,
+			RetweetId: retweetTargetId,
+			content: 'retweet',
+		});
+		const retweetWithPrevPost = await Post.findOne({ // どんな投稿をRetweetしたのか。。
+			where: { id: retweet.id },
 			include: [{
+				model: Post,
+				as: 'Retweet',
+				include: [{
+					model: User,
+					attributes: ['id', 'nickname'],
+				}, {
+					model: Image,
+				}]
+			}, {
 				model: User,
 				attributes: ['id', 'nickname'],
-			}],
+			}, {
+				model: Image,
+			}, {
+				model: Comment,
+				include: [{
+					model: User,
+					attributes: ['id', 'nickname'],
+				}]
+			}]
 		})
-		res.status(200).json(fullComment);
+		res.status(200).json(retweetWithPrevPost);
 	} catch(error) {
 		console.error(error);
 		next(error);
