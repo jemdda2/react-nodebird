@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { END } from 'redux-saga';
 
 import PostForm from '../components/PostForm';
 import PostCard from '../components/PostCard';
@@ -7,6 +8,7 @@ import AppLayout from '../components/AppLayout';
 
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
 import { LOAD_USER_REQUEST } from '../reducers/user';
+import wrapper from '../store/configureStore';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -18,15 +20,6 @@ const Home = () => {
       alert(retweetError);
     }
   }, [retweetError]);
-
-  useEffect(() => {
-    dispatch({
-      type: LOAD_USER_REQUEST,
-    })
-    dispatch({
-      type: LOAD_POSTS_REQUEST,
-    })
-  }, [])
 
   useEffect(() => {
     // 스크롤이 어디까지 왔는지 판단
@@ -54,5 +47,17 @@ const Home = () => {
     </AppLayout>
   );
 };
+
+// Homeより先に実行する
+export const getServerSideProps = wrapper.getServerSideProps(async (context) => {
+  context.store.dispatch({
+    type: LOAD_USER_REQUEST,
+  });
+  context.store.dispatch({
+    type: LOAD_POSTS_REQUEST,
+  });
+  context.store.dispatch(END); // RequestがSuccessなるのを待ってる
+  await context.store.sagaTask.toPromise();
+});
 
 export default Home;
