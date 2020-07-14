@@ -5,6 +5,9 @@ import {
   LOAD_USER_FAILURE,
   LOAD_USER_REQUEST,
   LOAD_USER_SUCCESS,
+  LOAD_MY_INFO_FAILURE,
+  LOAD_MY_INFO_REQUEST,
+  LOAD_MY_INFO_SUCCESS,
   LOG_IN_FAILURE,
   LOG_IN_REQUEST,
   LOG_IN_SUCCESS,
@@ -118,9 +121,9 @@ function* changeNickname(action) {
   }
 }
 
-function loadUserAPI() {
+function loadUserAPI(data) {
   // 서버에 요청을 보내는 부분 * 붙이지 말 것
-  return axios.get('/user');
+  return axios.get(`/user/${data}`);
 }
 
 function* loadUser(action) {
@@ -134,6 +137,27 @@ function* loadUser(action) {
     console.error(err);
     yield put({
       type: LOAD_USER_FAILURE,
+      error: err.response.data,
+    });
+  }
+}
+
+function loadMyInfoAPI() {
+  // 서버에 요청을 보내는 부분 * 붙이지 말 것
+  return axios.get('/user');
+}
+
+function* loadMyInfo(action) {
+  try {
+    const result = yield call(loadMyInfoAPI);
+    yield put({ // put은 dispatch 동일
+      type: LOAD_MY_INFO_SUCCESS,
+      data: result.data,
+    });
+  } catch (err) { // loginAPI 실패
+    console.error(err);
+    yield put({
+      type: LOAD_MY_INFO_FAILURE,
       error: err.response.data,
     });
   }
@@ -258,6 +282,9 @@ function* watchChangeNickname() {
 function* watchLoadUser() {
   yield takeEvery(LOAD_USER_REQUEST, loadUser);
 }
+function* watchLoadMyInfo() {
+  yield takeEvery(LOAD_MY_INFO_REQUEST, loadMyInfo);
+}
 function* watchFollow() {
   yield takeEvery(FOLLOW_REQUEST, follow);
 }
@@ -283,6 +310,7 @@ export default function* userSaga() {
     fork(watchChangeNickname),
     fork(watchChangeNickname),
     fork(watchLoadUser),
+    fork(watchLoadMyInfo),
     fork(watchFollow),
     fork(watchUnfollow),
     fork(watchLogin),
