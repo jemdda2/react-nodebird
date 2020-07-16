@@ -1,3 +1,7 @@
+# 2020/07/6
+### Next サーバーサイドレンダリング方法
+* cookieをheaders.Cookieにいれる。
+
 # 2020/07/13
 ### Next サーバーサイドレンダリング方法
 * getServerSideProps実行 => context.store.dispatch(実行された結果) => reducers/index.js case HYDRATE実行 => 
