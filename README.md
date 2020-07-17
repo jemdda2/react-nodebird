@@ -1,4 +1,11 @@
-# 2020/07/6
+# 2020/07/7
+### Next Dynamic Routes
+* post/[1].js
+* _document.jsを使うとapp.jsが囲まれてhtml,headなどを修正可能になる
+* getInitalPropsはappとdocumentだけで使える特殊なサーバーサイドレンダリング
+* Request path contains unescaped characters：front(encodeURIComponent) back(decodeURIComponent)
+
+# 2020/07/16
 ### Next サーバーサイドレンダリング方法
 * cookieをheaders.Cookieにいれる。
 
