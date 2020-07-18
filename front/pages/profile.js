@@ -8,7 +8,9 @@ import axios from 'axios';
 import AppLayout from '../components/AppLayout';
 import NicknameEditForm from '../components/NicknameeEditForm';
 import FollowList from '../components/FollowList';
-import { LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWINGS_REQUEST } from '../reducers/user';
+import { LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWINGS_REQUEST, LOAD_MY_INFO_REQUEST } from '../reducers/user';
+import { LOAD_POSTS_REQUEST, } from '../reducers/post';
+
 import wrapper from '../store/configureStore';
 
 const Profile = () => {

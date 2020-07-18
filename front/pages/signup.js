@@ -5,7 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { END } from 'redux-saga';
 
-import { SIGN_UP_REQUEST } from '../reducers/user';
+import { SIGN_UP_REQUEST, LOAD_MY_INFO_REQUEST } from '../reducers/user';
+import { LOAD_POSTS_REQUEST } from '../reducers/post'
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
 import Router from 'next/router';

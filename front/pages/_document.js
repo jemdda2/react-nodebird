@@ -28,6 +28,7 @@ export default class MyDocument extends Document {
 	}
 
 	render() {
+		return(
 		<Html>
 			<Head />
 			<body>
@@ -37,5 +38,6 @@ export default class MyDocument extends Document {
 				<NextScript />
 			</body>
 		</Html>
+		)
 	}
 }
