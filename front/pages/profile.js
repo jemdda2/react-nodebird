@@ -11,6 +11,7 @@ import NicknameEditForm from '../components/NicknameeEditForm';
 import FollowList from '../components/FollowList';
 import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import { LOAD_POSTS_REQUEST } from '../reducers/post';
+
 import wrapper from '../store/configureStore';
 
 const fetcher = (url) => axios.get(url, {withCredentials: true}).then((result) => result.data);
