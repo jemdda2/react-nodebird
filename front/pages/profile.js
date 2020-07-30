@@ -30,6 +30,14 @@ const Profile = () => {
     }
   }, [me && me.id]);
 
+  const loadMoreFollowings = useCallback(() => {
+    setFollowingsLimit((prev) => prev + 3)
+  }, []);
+
+  const loadMoreFollowers = useCallback(() => {
+    setFollowersLimit((prev) => prev + 3)
+  }, []);
+
   if (!me) {
     return 'ログイン情報をロード中。。。';
   }
@@ -46,8 +54,8 @@ const Profile = () => {
       </Head>
       <AppLayout>
         <NicknameEditForm />
-        <FollowList header="FOLLOWING" data={followingsData} />
-        <FollowList header="FOLLOWER" data={followersData} />
+        <FollowList header="FOLLOWING" data={followingsData} onClickMore={loadMoreFollowings} loading={!followingsData && !followingError} />
+        <FollowList header="FOLLOWER" data={followersData} onClickMore={loadMoreFollowers} loading={!followersData && !followerError} />
       </AppLayout>
     </>
   );

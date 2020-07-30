@@ -27,7 +27,11 @@ const FollowList = ({ header, data, onClickMore, loading }) => {
       grid={{ gutter: 4, xs: 2, md: 3 }}
       size="small"
       header={<div>{header}</div>}
-      loadMor={<div style={{ textAlign: 'center', margin: '10px 0' }}><Button onClick={onClickMore} loading={loading}>더 보기</Button></div>}
+      loadMore={(
+        <div style={{ textAlign: 'center', margin: '10px 0' }}>
+          <Button onClick={onClickMore} loading={loading}>더 보기</Button>
+        </div>
+      )}
       bordered
       dataSource={data}
       renderItem={(item) => (
@@ -44,6 +48,8 @@ const FollowList = ({ header, data, onClickMore, loading }) => {
 FollowList.propTypes = {
   header: PropTypes.string.isRequired,
   data: PropTypes.array.isRequired,
+  onClickMore: PropTypes.func.isRequired,
+  loading: PropTypes.bool.isRequired,
 }
 
 export default FollowList

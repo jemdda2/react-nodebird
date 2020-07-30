@@ -46,7 +46,7 @@ router.get('/followers', isLoggedIn, async (req, res, next) => { // GET /user/fo
 			res.status(403).send('없는 사람은 팔로우할수 없습니다.');
 		}
 		const followers = await user.getFollowers({
-			limit: req.query.limit,
+			limit: parseInt(req.query.limit, 10),
 		});
 		res.status(200).json(followers);
 	} catch (error) {
@@ -62,7 +62,7 @@ router.get('/followings', isLoggedIn, async (req, res, next) => { // GET /user/f
 			res.status(403).send('없는 사람은 팔로우할수 없습니다.');
 		}
 		const followings = await user.getFollowings({
-			limit: req.query.limit,
+			limit: parseInt(req.query.limit, 10),
 		});
 		res.status(200).json(followings);
 	} catch (error) {
