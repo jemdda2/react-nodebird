@@ -12,7 +12,6 @@ import useInput from '../hooks/useInput';
 import Router from 'next/router';
 import wrapper from '../store/configureStore';
 
-
 const Signup = () => {
 	const dispatch = useDispatch();
 	const { signUpLoading, signUpDone, me } = useSelector((state) => state.user )
@@ -39,7 +38,7 @@ const Signup = () => {
 		setPasswordCheck(e.target.value);
 		setPasswordError(e.target.value !== password);
 	}, [password])
-	
+
 	const [term, setTerm] = useState('');
 	const [termError, setTermError] = useState(false);
 	const onChangeTerm = useCallback((e) =>{
