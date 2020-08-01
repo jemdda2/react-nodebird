@@ -1,4 +1,8 @@
-# 2020/07/7
+# 2020/07/18
+### loadする時に便利
+* npm i swr：サーバーサイドレンダリングが必要ない画面で使用
+
+# 2020/07/17
 ### Next Dynamic Routes
 * post/[1].js
 * _document.jsを使うとapp.jsが囲まれてhtml,headなどを修正可能になる
